@@ -8,8 +8,8 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Middleware to parse JSON bodies
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/api/candidateInfo/:id', async (req, res) => {
     const data = await getCandidateInfo(req.params.id);
