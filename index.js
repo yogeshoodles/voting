@@ -8,12 +8,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Middleware to parse JSON bodies
-app.use(cors({
-    origin: 'https://cdpn.io', // Replace with your frontend URL
-    methods: ['GET', 'POST'],  // Allowed methods
-    allowedHeaders: ['Content-Type'], // Allowed headers
-    credentials: true, // If cookies/auth tokens are involved
-}));
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/api/candidateInfo/:id', async (req, res) => {
