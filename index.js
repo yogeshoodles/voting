@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 const {addCandidate, getCandidateInfo, vote, getWinner} = require('./contract');
 
@@ -8,6 +9,7 @@ const PORT = process.env.PORT;
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/api/candidateInfo/:id', async (req, res) => {
     const data = await getCandidateInfo(req.params.id);
