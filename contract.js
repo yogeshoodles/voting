@@ -32,9 +32,44 @@ async function getWinner() {
     return data;
 }
 
+async function getPastEvents() {
+    const filter = {
+      address: contractAddress,
+      topics: [
+        ethers.id("votedEvent(uint256)")
+      ],
+      fromBlock: 0,
+      toBlock: "latest",
+    };
+  
+    try {
+      const logs = await provider.getLogs(filter);
+
+      const parsedEvents = await Promise.all(logs.map(async (log) => {
+        const parsedLog = contract.interface.parseLog(log);        
+        const block = await provider.getBlock(log.blockNumber);
+        return {
+          eventName: parsedLog.name,
+          args: parsedLog.args.toString(),
+          transactionHash: log.transactionHash,
+          blockNumber: log.blockNumber,
+          blockTimestamp: block.timestamp,
+          logIndex: log.index,
+          eventSignature: log.topics,
+        };
+      }));
+  
+      return parsedEvents;
+    } catch (error) {
+      console.error("Error fetching or parsing events:", error);
+      return [];
+    }
+}
+
 module.exports = {
     addCandidate,
     getCandidateInfo,
     vote,
-    getWinner
+    getWinner,
+    getPastEvents
 };

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
-const {addCandidate, getCandidateInfo, vote, getWinner} = require('./contract');
+const {addCandidate, getCandidateInfo, vote, getWinner, getPastEvents} = require('./contract');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -78,6 +78,23 @@ app.post('/api/voteCandidate', async (req, res) => {
         message: 'Candidate voted successfully!',
         success: true,
         data: { txn: data.txn }
+    });
+});
+
+app.get('/api/getPastEvents', async (req, res) => {
+    const events = await getPastEvents();
+    
+    if(events.length == 0){
+        return res.status(400).json({
+            message: 'No events found!',
+            success: false,
+        });
+    }
+    
+    res.json({
+        message: 'Request completed successfully!',
+        success: true,
+        data: {events}
     });
 });
 
